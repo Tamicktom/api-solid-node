@@ -1,5 +1,6 @@
 //* Libraries imports
 import type { FastifyRequest, FastifyReply } from "fastify";
+import { hash } from "bcryptjs";
 import z from "zod";
 
 //* Local imports
@@ -14,11 +15,23 @@ export async function register(req: FastifyRequest, res: FastifyReply) {
 
   const { name, email, password } = registerBodySchema.parse(req.body);
 
-  const user = await p.user.create({
+  const hashedPassword = await hash(password, 10);
+
+  const userWithSameEmail = await p.user.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  if (userWithSameEmail) {
+    return res.status(409).send("Email already in use");
+  }
+
+  await p.user.create({
     data: {
       name,
       email,
-      password_hash: password,
+      password_hash: hashedPassword,
     },
   });
 
