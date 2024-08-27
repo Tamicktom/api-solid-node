@@ -3,7 +3,7 @@ import { hash } from "bcryptjs";
 
 //* Local imports
 import { p } from "@/lib/prisma";
-import { PrismaUsersRepository } from "@/repositories/prisma-users-repository";
+import type { UserRepository } from "@/repositories/users-repository";
 
 interface RegisterUseCaseRequest {
   name: string;
@@ -11,26 +11,27 @@ interface RegisterUseCaseRequest {
   password: string;
 }
 
-export async function registerUseCase(data: RegisterUseCaseRequest) {
-  const { name, email, password } = data;
+export class RegisterUseCase {
+  constructor(private usersRepository: UserRepository) { }
 
-  const password_hash = await hash(password, 10);
+  async execute(data: RegisterUseCaseRequest) {
+    const { name, email, password } = data;
 
-  const userWithSameEmail = await p.user.findUnique({
-    where: {
+    const password_hash = await hash(password, 10);
+
+    const userWithSameEmail = await this.usersRepository.findUnique({
       email,
-    },
-  });
+    });
 
-  if (userWithSameEmail) {
-    throw new Error("Email already in use");
+    if (userWithSameEmail) {
+      throw new Error("Email already in use");
+    }
+
+    await this.usersRepository.create({
+      name,
+      email,
+      password_hash,
+    });
   }
-
-  const prismaUsersRepository = new PrismaUsersRepository();
-
-  await prismaUsersRepository.create({
-    name,
-    email,
-    password_hash,
-  });
 }
+
