@@ -1,7 +1,9 @@
 //* Libraries imports
 import fastify from "fastify";
-import { PrismaClient } from "@prisma/client";
 
-const p = new PrismaClient();
+//* Local imports
+import { appRoutes } from "@/http/routes";
 
 export const app = fastify();
+
+app.register(appRoutes);
