@@ -19,9 +19,7 @@ export class RegisterUseCase {
 
     const password_hash = await hash(password, 10);
 
-    const userWithSameEmail = await this.usersRepository.findUnique({
-      email,
-    });
+    const userWithSameEmail = await this.usersRepository.findByEmail(email);
 
     if (userWithSameEmail) {
       throw new Error("Email already in use");

@@ -1,11 +1,10 @@
 //* Libraries imports
 import type { FastifyRequest, FastifyReply } from "fastify";
-import { hash } from "bcryptjs";
 import z from "zod";
 
 //* Local imports
 import { RegisterUseCase } from "@/use-cases/register";
-import { PrismaUsersRepository } from '@/repositories/prisma-users-repository';
+import { PrismaUsersRepository } from '@/repositories/prisma/prisma-users-repository';
 
 export async function register(req: FastifyRequest, res: FastifyReply) {
   const registerBodySchema = z.object({
