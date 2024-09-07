@@ -29,7 +29,8 @@ export async function register(req: FastifyRequest, res: FastifyReply) {
         });
     }
 
-    return res.status(500); // TODO: Improve this
+    // return res.status(500); // TODO: Improve this
+    throw error;
   }
 
   return res.status(201).send();
