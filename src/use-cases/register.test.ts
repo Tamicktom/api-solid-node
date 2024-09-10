@@ -1,6 +1,6 @@
 //* Libraries imports
-import { describe, expect, it, test } from "vitest";
-import { compare, hash } from "bcryptjs";
+import { describe, expect, it } from "vitest";
+import { compare } from "bcryptjs";
 
 //* Local imports
 import { RegisterUseCase } from "./register";
